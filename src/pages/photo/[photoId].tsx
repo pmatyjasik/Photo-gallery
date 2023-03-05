@@ -5,14 +5,17 @@ import toast from 'react-hot-toast';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Photo } from 'types/types';
+import { LocalStorageKeys, Photo } from 'types/types';
 
 const DEFAULT_VALUE: number[] = [];
 
 const SinglePhoto = () => {
 	const [photo, setPhoto] = useState<Photo>();
 	const [isLoading, setIsLoading] = useState(false);
-	const [value, setValue] = useLocalStorage<number[]>(DEFAULT_VALUE, 'photoId');
+	const [value, setValue] = useLocalStorage<number[]>(
+		DEFAULT_VALUE,
+		LocalStorageKeys.LocalStorageKey
+	);
 	const {
 		query: { photoId },
 	} = useRouter();

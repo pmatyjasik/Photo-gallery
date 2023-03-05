@@ -3,7 +3,7 @@ import useLocalStorage from 'hooks/useLocalStorage';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Photo } from 'types/types';
+import { Photo, LocalStorageKeys } from 'types/types';
 import { fetchPhoto } from 'utils/fetchPhoto';
 
 const DEFAULT_VALUE: number[] = [];
@@ -11,7 +11,10 @@ const DEFAULT_VALUE: number[] = [];
 const Favourites = () => {
 	const [photos, setPhotos] = useState<Photo[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [value, setValue] = useLocalStorage<number[]>(DEFAULT_VALUE, 'photoId');
+	const [value, setValue] = useLocalStorage<number[]>(
+		DEFAULT_VALUE,
+		LocalStorageKeys.LocalStorageKey
+	);
 
 	useEffect(() => {
 		if (value) {

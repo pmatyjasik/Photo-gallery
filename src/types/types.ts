@@ -28,3 +28,7 @@ export interface PhotosInterface {
 	photos: Array<Photo>;
 	total_results: number;
 }
+
+export enum LocalStorageKeys {
+	LocalStorageKey = 'Photo',
+}

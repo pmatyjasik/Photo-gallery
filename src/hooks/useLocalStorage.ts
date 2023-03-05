@@ -11,8 +11,8 @@ function useLocalStorage<T>(defaultValue: T, key: string) {
 	}, [defaultValue, key, value]);
 
 	useEffect(() => {
-		const stickyValue = window.localStorage.getItem(key);
-		setValue(stickyValue != null ? JSON.parse(stickyValue) : defaultValue);
+		const storageValue = window.localStorage.getItem(key);
+		setValue(storageValue != null ? JSON.parse(storageValue) : defaultValue);
 	}, [defaultValue, key]);
 
 	return [value, setValue] as const;

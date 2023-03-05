@@ -10,10 +10,11 @@ import toast from 'react-hot-toast';
 import useDebounce from 'hooks/useDebounce';
 
 const Home = () => {
-	const [page, setPage] = useState<number>(1);
-	const [perPage, setPerPage] = useState<number>(20);
+	const [page, setPage] = useState(1);
+	const [perPage, setPerPage] = useState(20);
 	const [photos, setPhotos] = useState<PhotosInterface>();
 	const [searchValue, setSearchValue] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const debouncedSearchValue = useDebounce(searchValue, 300);
 
 	const maxPage = useMemo(
@@ -40,22 +41,21 @@ const Home = () => {
 
 	useEffect(() => {
 		if (debouncedSearchValue === '') {
+			setIsLoading(true);
 			fetchPagination(page, perPage)
 				.then(setPhotos)
 				.catch((err) => {
 					if (err instanceof Error) toast.error(err.message);
-				});
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: 'smooth',
-			});
+				})
+				.finally(() => setIsLoading(false));
 		} else {
+			setIsLoading(true);
 			fetchBySearch(page, perPage, debouncedSearchValue)
 				.then(setPhotos)
 				.catch((err) => {
 					if (err instanceof Error) toast.error(err.message);
-				});
+				})
+				.finally(() => setIsLoading(false));
 		}
 		window.scrollTo({
 			top: 0,
@@ -71,7 +71,6 @@ const Home = () => {
 				<meta name="description" content="Homepage - mohi.to" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-
 			<input
 				type="search"
 				className="block w-full p-4 pl-10 my-4 text-black bg-white border rounded-lg shadow-x border-primary"
@@ -80,47 +79,55 @@ const Home = () => {
 				onChange={handleChangeInput}
 				required
 			/>
-			<div className="grid grid-auto gap-7">
-				{photos?.photos?.map(({ id, alt, src: { large } }) => (
-					<GridItem key={id} image={large} imageAlt={alt} id={id} />
-				))}
-			</div>
-			<div className="flex flex-row justify-between mt-6">
-				<div className="flex flex-row items-center justify-center gap-x-2">
-					<FaMinus
-						className={`${
-							page === 1 ? 'pointer-events-none opacity-20' : 'cursor-pointer'
-						} text-primary h-5 w-5`}
-						onClick={() => setPage((prev) => prev - 1)}
-					/>
-					<span className="text-2xl shadow-2xl text-secondary">{page}</span>
-					<FaPlus
-						className={`${
-							page === maxPage
-								? 'pointer-events-none opacity-20'
-								: 'cursor-pointer'
-						} text-primary h-5 w-5`}
-						onClick={() => setPage((prev) => prev + 1)}
-					/>
-				</div>
-				<div className="flex flex-row items-center justify-between text-xl gap-x-2">
-					<PerPageButton
-						perPage={20}
-						currentPerPage={perPage}
-						onClick={() => handleSetPerPage(20)}
-					/>
-					<PerPageButton
-						perPage={40}
-						currentPerPage={perPage}
-						onClick={() => handleSetPerPage(40)}
-					/>
-					<PerPageButton
-						perPage={60}
-						currentPerPage={perPage}
-						onClick={() => handleSetPerPage(60)}
-					/>
-				</div>
-			</div>
+			{isLoading ? (
+				<p className="text-center">Loading...</p>
+			) : (
+				<>
+					<div className="grid grid-auto gap-7">
+						{photos?.photos?.map(({ id, alt, src: { large } }) => (
+							<GridItem key={id} image={large} imageAlt={alt} id={id} />
+						))}
+					</div>
+					<div className="flex flex-row justify-between mt-6">
+						<div className="flex flex-row items-center justify-center gap-x-2">
+							<FaMinus
+								className={`${
+									page === 1
+										? 'pointer-events-none opacity-20'
+										: 'cursor-pointer'
+								} text-primary h-5 w-5`}
+								onClick={() => setPage((prev) => prev - 1)}
+							/>
+							<span className="text-2xl shadow-2xl text-secondary">{page}</span>
+							<FaPlus
+								className={`${
+									page === maxPage
+										? 'pointer-events-none opacity-20'
+										: 'cursor-pointer'
+								} text-primary h-5 w-5`}
+								onClick={() => setPage((prev) => prev + 1)}
+							/>
+						</div>
+						<div className="flex flex-row items-center justify-between text-xl gap-x-2">
+							<PerPageButton
+								perPage={20}
+								currentPerPage={perPage}
+								onClick={() => handleSetPerPage(20)}
+							/>
+							<PerPageButton
+								perPage={40}
+								currentPerPage={perPage}
+								onClick={() => handleSetPerPage(40)}
+							/>
+							<PerPageButton
+								perPage={60}
+								currentPerPage={perPage}
+								onClick={() => handleSetPerPage(60)}
+							/>
+						</div>
+					</div>
+				</>
+			)}
 		</>
 	);
 };

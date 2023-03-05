@@ -3,7 +3,7 @@ import NavItem from './NavItem';
 import { FaBars, FaRegWindowClose } from 'react-icons/fa';
 
 const MobileMenu = () => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const toggle = () => {
 		setIsOpen((prev) => !prev);

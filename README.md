@@ -17,7 +17,7 @@ In repository you can find file `.env.example` - copy that file and change name 
 ```bash
 NEXT_PUBLIC_PEXELS_API_KEY=<YOUR_API_KEY>
 ```
-### 3. Run the development server:
+### 5. Run the development server:
 First, run the development server:
 
 ```bash

@@ -35,6 +35,9 @@ const Favourites = () => {
 				<meta name="description" content="Favourites" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
+			{value.length === 0 && (
+				<p className="text-center">Favourites list is empty</p>
+			)}
 			{isLoading ? (
 				<p className="text-center">Loading...</p>
 			) : (

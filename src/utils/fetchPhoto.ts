@@ -1,6 +1,6 @@
 import { Photo } from 'types/types';
 
-export async function fetchPhoto(id: string): Promise<Photo> {
+export async function fetchPhoto(id: string | number): Promise<Photo> {
 	const response = await fetch(`https://api.pexels.com/v1/photos/${id}`, {
 		method: 'GET',
 		headers: {

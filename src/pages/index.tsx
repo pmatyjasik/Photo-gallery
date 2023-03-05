@@ -1,25 +1,20 @@
-import type { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { fetchPagination } from 'utils/fetchPagination';
 import { PhotosInterface } from 'types/types';
 import GridItem from 'components/GridItem';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import PerPageButton from 'components/PerPageButton';
+import toast from 'react-hot-toast';
 
-const Home = ({
-	serverSideRenderedPhotos,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = () => {
 	const [page, setPage] = useState<number>(1);
 	const [perPage, setPerPage] = useState<number>(20);
-	const [photos, setPhotos] = useState<PhotosInterface>(
-		serverSideRenderedPhotos
-	);
+	const [photos, setPhotos] = useState<PhotosInterface>();
 
-	const isFirstMount = useRef<boolean>(true);
 	const maxPage = useMemo(
-		() => Math.ceil(photos.total_results / perPage),
-		[photos.total_results, perPage]
+		() => Math.ceil(photos?.total_results ?? 1 / perPage),
+		[photos?.total_results, perPage]
 	);
 
 	const handleSetPerPage = (perPage: number) => {
@@ -28,11 +23,11 @@ const Home = ({
 	};
 
 	useEffect(() => {
-		if (isFirstMount.current) {
-			isFirstMount.current = false;
-			return;
-		}
-		fetchPagination(page, perPage).then((newPhotos) => setPhotos(newPhotos));
+		fetchPagination(page, perPage)
+			.then(setPhotos)
+			.catch((err) => {
+				if (err instanceof Error) toast.error(err.message);
+			});
 		window.scrollTo({
 			top: 0,
 			left: 0,
@@ -48,7 +43,7 @@ const Home = ({
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<div className="grid grid-auto gap-7">
-				{photos.photos?.map(({ id, alt, src: { large } }) => (
+				{photos?.photos?.map(({ id, alt, src: { large } }) => (
 					<GridItem key={id} image={large} imageAlt={alt} id={id} />
 				))}
 			</div>
@@ -75,12 +70,12 @@ const Home = ({
 						perPage={20}
 						currentPerPage={perPage}
 						onClick={() => handleSetPerPage(20)}
-					/>{' '}
+					/>
 					<PerPageButton
 						perPage={40}
 						currentPerPage={perPage}
 						onClick={() => handleSetPerPage(40)}
-					/>{' '}
+					/>
 					<PerPageButton
 						perPage={60}
 						currentPerPage={perPage}
@@ -93,12 +88,3 @@ const Home = ({
 };
 
 export default Home;
-
-export async function getServerSideProps() {
-	const serverSideRenderedPhotos = await fetchPagination();
-	return {
-		props: {
-			serverSideRenderedPhotos,
-		},
-	};
-}

@@ -25,7 +25,6 @@ const GridItem = ({ image, imageAlt, id }: GridItemProps) => (
 					placeholder="blur"
 				/>
 			</figure>
-			<p className="text-sm overflow">{imageAlt}</p>
 		</div>
 	</Link>
 );

@@ -68,7 +68,7 @@ const Home = () => {
 		<>
 			<Head>
 				<title>Home</title>
-				<meta name="description" content="Homepage - mohi.to" />
+				<meta name="description" content="Homepage" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<input

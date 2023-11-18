@@ -21,3 +21,4 @@ NEXT_PUBLIC_PEXELS_API_KEY=<YOUR_API_KEY>
 ```bash
 npm run dev
 ```
+![CleanShot 2023-11-19 at 00 09 53](https://github.com/pmatyjasik/photo-gallery/assets/73366069/7eb91539-987d-452b-9c35-97f729e311b9)
